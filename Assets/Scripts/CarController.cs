@@ -9,18 +9,18 @@ public class CarController : MonoBehaviour
     public float maxSpeed;
 
     public float forwardAccel = 8f, reverseAccel = 4f;
-    private float speedInput;
+    float speedInput;
 
     public float turnStrength = 180f;
-    private float turnInput;
+    float turnInput;
 
-    private bool grounded;
+    bool grounded;
 
     public Transform groundRayPoint, groundRayPoint2;
     public LayerMask whatIsGround;
     public float groundRayLenght = 0.75f;
 
-    private float dragOnGround;
+    float dragOnGround;
     public float gravityMod = 10f;
 
     public Transform leftFrontWheel, rightFrontWheel;
@@ -28,7 +28,7 @@ public class CarController : MonoBehaviour
 
     public ParticleSystem[] dustTrail;
     public float maxEmission = 25f, emissionFadeSpeed = 20f;
-    private float emissionRate;
+    float emissionRate;
 
     // Start is called before the first frame update
     void Start()
@@ -52,10 +52,10 @@ public class CarController : MonoBehaviour
 
         turnInput = Input.GetAxis("Horizontal");
 
-        if(grounded  && Input.GetAxis("Vertical") != 0)
-        {
-            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnStrength * Time.deltaTime * Mathf.Sign(speedInput) * (theRB.velocity.magnitude / maxSpeed), 0f));
-        }
+        //if(grounded  && Input.GetAxis("Vertical") != 0)
+        //{
+        //    transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnStrength * Time.deltaTime * Mathf.Sign(speedInput) * (theRB.velocity.magnitude / maxSpeed), 0f));
+        //}
 
 
 
@@ -63,7 +63,7 @@ public class CarController : MonoBehaviour
         leftFrontWheel.localRotation = Quaternion.Euler(leftFrontWheel.localRotation.eulerAngles.x, (turnInput * maxWheelTurn) - 180, leftFrontWheel.localRotation.eulerAngles.z);
         rightFrontWheel.localRotation = Quaternion.Euler(rightFrontWheel.localRotation.eulerAngles.x, (turnInput * maxWheelTurn), rightFrontWheel.localRotation.eulerAngles.z);
 
-        transform.position = theRB.position;
+        //transform.position = theRB.position;
 
         //controll particle emission
         emissionRate = Mathf.MoveTowards(emissionRate, 0f, emissionFadeSpeed * Time.deltaTime);
@@ -120,5 +120,10 @@ public class CarController : MonoBehaviour
             theRB.velocity = theRB.velocity.normalized * maxSpeed;
         }
         Debug.Log(theRB.velocity.magnitude);
+        transform.position = theRB.position;
+        if (grounded && Input.GetAxis("Vertical") != 0)
+        {
+            transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnStrength * Time.deltaTime * Mathf.Sign(speedInput) * (theRB.velocity.magnitude / maxSpeed), 0f));
+        }
     }
 }
