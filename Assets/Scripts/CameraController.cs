@@ -10,10 +10,11 @@ public class CameraController : MonoBehaviour
     public float minDistance, maxDistance;
     float activeDistance;
 
+    public Transform startTargetOffset;
     // Start is called before the first frame update
     void Start()
     {
-        offsetDir = transform.position - target.transform.position;
+        offsetDir = transform.position - startTargetOffset.position;
         activeDistance = minDistance;
         offsetDir.Normalize();
     }
