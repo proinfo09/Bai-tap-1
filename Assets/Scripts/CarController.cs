@@ -30,7 +30,7 @@ public class CarController : MonoBehaviour
     public float maxEmission = 25f, emissionFadeSpeed = 20f;
     float emissionRate;
 
-    int nextCheckpoint;
+    public int nextCheckpoint;
     public int currentLap;
 
     public float lapTime, bestLapTime;
