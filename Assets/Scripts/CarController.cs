@@ -59,87 +59,91 @@ public class CarController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        lapTime += Time.deltaTime;
-
-        if (!isAI)
+        if (!RaceManager.instance.isStaring)
         {
-            var ts = System.TimeSpan.FromSeconds(lapTime);
-            UIManager.instance.currentLapTimeText.text = string.Format("{0:00}m{1:00}.{2:000}s", ts.Minutes, ts.Seconds, ts.Milliseconds);
-            speedInput = 0f;
-            if (Input.GetAxis("Vertical") > 0)
+
+
+            lapTime += Time.deltaTime;
+
+            if (!isAI)
             {
-                speedInput = Input.GetAxis("Vertical") * forwardAccel;
-            }
-            else if (Input.GetAxis("Vertical") < 0)
-            {
-                speedInput = Input.GetAxis("Vertical") * reverseAccel;
-            }
+                var ts = System.TimeSpan.FromSeconds(lapTime);
+                UIManager.instance.currentLapTimeText.text = string.Format("{0:00}m{1:00}.{2:000}s", ts.Minutes, ts.Seconds, ts.Milliseconds);
+                speedInput = 0f;
+                if (Input.GetAxis("Vertical") > 0)
+                {
+                    speedInput = Input.GetAxis("Vertical") * forwardAccel;
+                }
+                else if (Input.GetAxis("Vertical") < 0)
+                {
+                    speedInput = Input.GetAxis("Vertical") * reverseAccel;
+                }
 
-            turnInput = Input.GetAxis("Horizontal");
+                turnInput = Input.GetAxis("Horizontal");
 
-            //if(grounded  && Input.GetAxis("Vertical") != 0)
-            //{
-            //    transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnStrength * Time.deltaTime * Mathf.Sign(speedInput) * (theRB.velocity.magnitude / maxSpeed), 0f));
-            //}
+                //if(grounded  && Input.GetAxis("Vertical") != 0)
+                //{
+                //    transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnStrength * Time.deltaTime * Mathf.Sign(speedInput) * (theRB.velocity.magnitude / maxSpeed), 0f));
+                //}
 
 
-        }
-        else
-        {
-            targetPoint.y = transform.position.y;
-
-            if (Vector3.Distance(transform.position, targetPoint) < aiReachPointRange)
-            {
-                SetNextAITarget();
-            }
-
-            Vector3 targetDir = targetPoint - transform.position;
-            float angle = Vector3.Angle(targetDir, transform.forward);
-
-            Vector3 localPos = transform.InverseTransformPoint(targetPoint);
-            if (localPos.x < 0f)
-            {
-                angle = -angle;
-            }
-
-            turnInput = Mathf.Clamp(angle / aiMaxTurn, -1f, 1f);
-
-            if (Mathf.Abs(angle) < aiMaxTurn)
-            {
-                aiSpeedInput = Mathf.MoveTowards(aiSpeedInput, 1f, aiAcceclerateSpeed);
             }
             else
             {
-                aiSpeedInput = Mathf.MoveTowards(aiSpeedInput, aiTurnSpeed, aiAcceclerateSpeed);
+                targetPoint.y = transform.position.y;
+
+                if (Vector3.Distance(transform.position, targetPoint) < aiReachPointRange)
+                {
+                    SetNextAITarget();
+                }
+
+                Vector3 targetDir = targetPoint - transform.position;
+                float angle = Vector3.Angle(targetDir, transform.forward);
+
+                Vector3 localPos = transform.InverseTransformPoint(targetPoint);
+                if (localPos.x < 0f)
+                {
+                    angle = -angle;
+                }
+
+                turnInput = Mathf.Clamp(angle / aiMaxTurn, -1f, 1f);
+
+                if (Mathf.Abs(angle) < aiMaxTurn)
+                {
+                    aiSpeedInput = Mathf.MoveTowards(aiSpeedInput, 1f, aiAcceclerateSpeed);
+                }
+                else
+                {
+                    aiSpeedInput = Mathf.MoveTowards(aiSpeedInput, aiTurnSpeed, aiAcceclerateSpeed);
+                }
+
+
+                speedInput = aiSpeedInput * forwardAccel * aiSpeedMod;
             }
 
 
-            speedInput = aiSpeedInput * forwardAccel * aiSpeedMod;
-        }
+            //turning the wheels
+            leftFrontWheel.localRotation = Quaternion.Euler(leftFrontWheel.localRotation.eulerAngles.x, (turnInput * maxWheelTurn) - 180, leftFrontWheel.localRotation.eulerAngles.z);
+            rightFrontWheel.localRotation = Quaternion.Euler(rightFrontWheel.localRotation.eulerAngles.x, (turnInput * maxWheelTurn), rightFrontWheel.localRotation.eulerAngles.z);
 
+            //transform.position = theRB.position;
 
-        //turning the wheels
-        leftFrontWheel.localRotation = Quaternion.Euler(leftFrontWheel.localRotation.eulerAngles.x, (turnInput * maxWheelTurn) - 180, leftFrontWheel.localRotation.eulerAngles.z);
-        rightFrontWheel.localRotation = Quaternion.Euler(rightFrontWheel.localRotation.eulerAngles.x, (turnInput * maxWheelTurn), rightFrontWheel.localRotation.eulerAngles.z);
-
-        //transform.position = theRB.position;
-
-        //controll particle emission
-        emissionRate = Mathf.MoveTowards(emissionRate, 0f, emissionFadeSpeed * Time.deltaTime);
-        if (grounded && (Mathf.Abs(turnInput) > 0.5f || (theRB.velocity.magnitude < maxSpeed * 0.5f && theRB.velocity.magnitude != 0f)))
-        {
-            emissionRate = maxEmission;
+            //controll particle emission
+            emissionRate = Mathf.MoveTowards(emissionRate, 0f, emissionFadeSpeed * Time.deltaTime);
+            if (grounded && (Mathf.Abs(turnInput) > 0.5f || (theRB.velocity.magnitude < maxSpeed * 0.5f && theRB.velocity.magnitude != 0f)))
+            {
+                emissionRate = maxEmission;
+            }
+            if (theRB.velocity.magnitude <= 0.5f)
+            {
+                emissionRate = 0f;
+            }
+            for (int i = 0; i < dustTrail.Length; i++)
+            {
+                var emissionModule = dustTrail[i].emission;
+                emissionModule.rateOverTime = emissionRate;
+            }
         }
-        if (theRB.velocity.magnitude <= 0.5f)
-        {
-            emissionRate = 0f;
-        }
-        for (int i = 0; i < dustTrail.Length; i++)
-        {
-            var emissionModule = dustTrail[i].emission;
-            emissionModule.rateOverTime = emissionRate;
-        }
-        
     }
 
     private void FixedUpdate()
