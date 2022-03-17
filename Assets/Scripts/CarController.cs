@@ -35,6 +35,9 @@ public class CarController : MonoBehaviour
 
     public float lapTime, bestLapTime;
 
+    public float resetCooldown = 2f;
+    float resetCounter;
+
     public bool isAI;
 
     public int currentTarget;
@@ -54,6 +57,7 @@ public class CarController : MonoBehaviour
             aiSpeedMod = Random.Range(0.8f, 1.1f);
         }
         UIManager.instance.lapCounterText.text = currentLap + "/" + RaceManager.instance.totalLaps;
+        resetCounter = resetCooldown;
     }
 
     // Update is called once per frame
@@ -85,8 +89,16 @@ public class CarController : MonoBehaviour
                 //{
                 //    transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles + new Vector3(0f, turnInput * turnStrength * Time.deltaTime * Mathf.Sign(speedInput) * (theRB.velocity.magnitude / maxSpeed), 0f));
                 //}
-
-
+                if(resetCounter > 0)
+                {
+                    resetCounter -= Time.deltaTime;
+                }
+                
+                if (Input.GetKeyDown(KeyCode.R) && resetCounter <= 0)
+                {
+                    ResetToTrack();
+                }
+                
             }
             else
             {
@@ -244,4 +256,19 @@ public class CarController : MonoBehaviour
     {
         targetPoint += new Vector3( Random.Range(-aiPointVariance, aiPointVariance), 0f, Random.Range(-aiPointVariance, aiPointVariance));
     }
+
+    void ResetToTrack()
+    {
+        int pointToGoTo = nextCheckpoint - 1;
+        if(pointToGoTo < 0)
+        {
+            pointToGoTo = RaceManager.instance.allCheckpoints.Length - 1;
+        }
+        transform.position = RaceManager.instance.allCheckpoints[pointToGoTo].transform.position;
+        theRB.transform.position = transform.position;
+        theRB.velocity = Vector3.zero;
+        speedInput = 0f;
+        turnInput = 0f;
+        resetCounter = resetCooldown;
+    } 
 }
