@@ -13,7 +13,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6900461837997248213, guid: 3c29213900b4e474f89333cf53e137b4, type: 3}
       propertyPath: m_Name
-      value: 'Truck '
+      value: Truck  Variant
       objectReference: {fileID: 0}
     - target: {fileID: 6900461837997248214, guid: 3c29213900b4e474f89333cf53e137b4, type: 3}
       propertyPath: m_RootOrder
@@ -58,6 +58,10 @@ PrefabInstance:
     - target: {fileID: 6900461837997248214, guid: 3c29213900b4e474f89333cf53e137b4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6900461837997248215, guid: 3c29213900b4e474f89333cf53e137b4, type: 3}
+      propertyPath: isAI
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6900461837997248215, guid: 3c29213900b4e474f89333cf53e137b4, type: 3}
       propertyPath: leftFrontWheel

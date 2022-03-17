@@ -21,6 +21,10 @@ public class RaceManager : MonoBehaviour
     float startCounter;
     public int countDownCurrent = 3;
 
+    public int playerStartPosition, aiNumberToSpawn;
+    public Transform[] startPoints;
+    public List<CarController> carToSpawn = new List<CarController>();
+
     private void Awake()
     {
         instance = this;
@@ -36,6 +40,18 @@ public class RaceManager : MonoBehaviour
         isStaring = true;
         startCounter = timeBetweenStarCount;
         UIManager.instance.countDownText.text = countDownCurrent + "!";
+        playerStartPosition = Random.Range(0, aiNumberToSpawn + 1);
+        playerCar.transform.position = startPoints[playerStartPosition].position;
+        playerCar.theRB.transform.position = startPoints[playerStartPosition].position;
+        for(int i = 0; i < aiNumberToSpawn + 1; i++)
+        {
+            if(i != playerStartPosition)
+            {
+                int selectedCar = Random.Range(0, carToSpawn.Count);
+                allAICars.Add(Instantiate(carToSpawn[selectedCar], startPoints[i].position, startPoints[i].rotation));
+                carToSpawn.RemoveAt(selectedCar);
+            }
+        }
     }
 
     // Update is called once per frame
