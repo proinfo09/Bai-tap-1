@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class RaceManager : MonoBehaviour
 {
@@ -24,6 +25,10 @@ public class RaceManager : MonoBehaviour
     public int playerStartPosition, aiNumberToSpawn;
     public Transform[] startPoints;
     public List<CarController> carToSpawn = new List<CarController>();
+
+    public bool raceCompleted;
+
+    public string raceCompleteScreen;
 
     private void Awake()
     {
@@ -49,7 +54,10 @@ public class RaceManager : MonoBehaviour
             {
                 int selectedCar = Random.Range(0, carToSpawn.Count);
                 allAICars.Add(Instantiate(carToSpawn[selectedCar], startPoints[i].position, startPoints[i].rotation));
-                carToSpawn.RemoveAt(selectedCar);
+                if (carToSpawn.Count > aiNumberToSpawn - i)
+                {
+                    carToSpawn.RemoveAt(selectedCar);
+                }
             }
         }
     }
@@ -125,5 +133,31 @@ public class RaceManager : MonoBehaviour
             }
         }
 
+    }
+
+    public void FinishRace()
+    {
+        raceCompleted = true;
+        switch (playerPosition)
+        {
+            case 1:
+                UIManager.instance.raceResultText.text = "You finished 1st";
+                break;
+            case 2:
+                UIManager.instance.raceResultText.text = "You finished 2nd";
+                break;
+            case 3:
+                UIManager.instance.raceResultText.text = "You finished 3rd";
+                break;
+            default:
+                UIManager.instance.raceResultText.text = "You finished " + playerPosition + "th";
+                break;
+        }
+        UIManager.instance.resultsScreen.SetActive(true);
+    }
+
+    public void ExitRace()
+    {
+        SceneManager.LoadScene(raceCompleteScreen);
     }
 }
