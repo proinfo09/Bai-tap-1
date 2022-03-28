@@ -633,7 +633,7 @@ MonoBehaviour:
   trackImage: {fileID: 1295025093}
   raceLap: 1
   unlockedText: {fileID: 666853937}
-  trackToUnlockOnWin: 
+  trackToUnlockOnWin: Track 2
 --- !u!1 &290829483
 GameObject:
   m_ObjectHideFlags: 0
@@ -2095,7 +2095,7 @@ MonoBehaviour:
   trackImage: {fileID: 2004613169}
   raceLap: 4
   unlockedText: {fileID: 1983761912}
-  trackToUnlockOnWin: Track 2
+  trackToUnlockOnWin: 
 --- !u!1 &746358243
 GameObject:
   m_ObjectHideFlags: 0
@@ -9582,7 +9582,7 @@ MonoBehaviour:
   trackImage: {fileID: 2001090509}
   raceLap: 1
   unlockedText: {fileID: 1511943342}
-  trackToUnlockOnWin: Track 1
+  trackToUnlockOnWin: Track3_Desert
 --- !u!1001 &1877356595
 PrefabInstance:
   m_ObjectHideFlags: 0
