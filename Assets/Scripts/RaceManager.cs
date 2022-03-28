@@ -38,6 +38,9 @@ public class RaceManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        totalLaps = RaceInfoManager.instance.noOfLaps;
+        aiNumberToSpawn = RaceInfoManager.instance.noOfAI;
+
         for(int i = 0; i < allCheckpoints.Length; i++)
         {
             allCheckpoints[i].cpNumber = i;
@@ -46,8 +49,12 @@ public class RaceManager : MonoBehaviour
         startCounter = timeBetweenStarCount;
         UIManager.instance.countDownText.text = countDownCurrent + "!";
         playerStartPosition = Random.Range(0, aiNumberToSpawn + 1);
-        playerCar.transform.position = startPoints[playerStartPosition].position;
-        playerCar.theRB.transform.position = startPoints[playerStartPosition].position;
+        playerCar = Instantiate(RaceInfoManager.instance.racerToUse, startPoints[playerStartPosition].position, startPoints[playerStartPosition].rotation);
+        playerCar.isAI = false;
+        CameraSwitcher.instance.SetTarget(playerCar);
+        //playerCar.GetComponent<AudioListener>().enabled = true;
+        //playerCar.transform.position = startPoints[playerStartPosition].position;
+        //playerCar.theRB.transform.position = startPoints[playerStartPosition].position;
         for(int i = 0; i < aiNumberToSpawn + 1; i++)
         {
             if(i != playerStartPosition)
@@ -60,6 +67,7 @@ public class RaceManager : MonoBehaviour
                 }
             }
         }
+        UIManager.instance.positionText.text = (playerStartPosition + 1) + "/" + (allAICars.Count + 1);
     }
 
     // Update is called once per frame

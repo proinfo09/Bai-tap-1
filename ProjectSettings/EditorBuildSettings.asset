@@ -6,9 +6,15 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 9fc0d4010bbf28b4594072e72b8655ab
+    path: Assets/Scenes/MainMenu.unity
+    guid: 14dc1c8053cbbb340bf7b26a80dcbf96
   - enabled: 1
     path: Assets/Scenes/Tracks/Track 1.unity
     guid: d827cd4b4f3ab4f4a9260e26a8f4627d
+  - enabled: 1
+    path: Assets/Scenes/Tracks/Track 2/Track 2.unity
+    guid: cc61b071c50b28147ae1343a66af9b69
+  - enabled: 1
+    path: Assets/_Udemy Racer Assets/Tracks/Track3_Desert.unity
+    guid: ebd4f4be8f166894cb11dd63195b1c95
   m_configObjects: {}
