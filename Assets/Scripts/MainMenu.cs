@@ -25,12 +25,19 @@ public class MainMenu : MonoBehaviour
             racerSelectImage.sprite = RaceInfoManager.instance.racerSprite;
             OpenRaceSetup();
         }
+        PlayerPrefs.SetInt(RaceInfoManager.instance.trackToLoad + "_unlocked", 1);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            PlayerPrefs.DeleteAll();
+            Debug.Log("Keys Deleted");
+        }
+#endif
     }
 
     public void StartGame()
